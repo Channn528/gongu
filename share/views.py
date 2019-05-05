@@ -25,7 +25,7 @@ def board(request, id):
      return render(request, 'board.html',{'contents',contents})
      
      
-# 기존 보드 및 추가보드에 쓰는거   
+# 추가보드에 쓰는거   
 def detail(request):
      if request.method == "POST":
           image = request.POST.get('image')
@@ -58,14 +58,14 @@ def update(request, id):
           
           contents.save()
           tags.save()
-          return redirect ('#', Content.pk, Tag.pk)
+          return redirect ('home.html', Content.pk, Tag.pk)
           
           
 # 수정 
 def edit(request, id):
      contents = Content.objects.get(pk=id)
      tags = Tag.objects.get(pk=id)
-     return render(request, '#', {'contents', contents}, {'tags',tags})          
+     return render(request, 'edit.html', {'contents', contents}, {'tags',tags})          
      
      
 #삭제
@@ -76,20 +76,3 @@ def delete(request, id):
           contents.delete()
           tags.delete()
 
-# #좋아요 숫자세기
-# @login_required
-# @require_POST
-# def like(request):
-#    if request.method == 'POST':
-#         user = request.user # 로그인한 유저를 가져온다.
-#         memo_id = request.POST.get('pk', None)
-#         memo = Memos.objects.get(pk = memo_id)
-#         if memo.likes.filter(id = user.id).exists():
-#              memo.likes.remove(user)
-#              message = 'You disliked this'
-#         else:
-#             memo.likes.add(user)
-#             message = 'You liked this'
-
-#    context = {'likes_count' : memo.total_likes, 'message' : message}
-#    return HttpResponse(json.dumps(context), content_type='application/json')        

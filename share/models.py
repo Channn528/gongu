@@ -1,6 +1,9 @@
 from django.db import models
-from django import forms
 
+from django.conf import settings
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill
+import re
 # Create your models here.
 class Content(models.Model):
      image = models.ImageField()
@@ -17,3 +20,18 @@ class Content(models.Model):
           
 class Tag(models.Model):
     name = models.CharField(max_length=140, unique=True)
+    
+  
+class Post(models.Model):
+     like_user_set = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                        blank=True,
+                                        related_name='like_user_set',
+                                        through='Like')
+
+@property
+def like_count(self):
+     return self.like_user_set.count()
+
+
+class Like(models.Model):
+      post = models.ForeignKey(Post)
