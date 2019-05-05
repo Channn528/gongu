@@ -76,3 +76,23 @@ def delete(request, id):
           contents.delete()
           tags.delete()
 
+# 좋아요
+@login_required
+@require_POST 
+def post_like(request):
+    pk = request.POST.get('pk', None) 
+    post = get_object_or_404(Post, pk=pk)
+    post_like, post_like_created = post.like_set.get_or_create(user=request.user)
+
+    if not post_like_created:
+        post_like.delete()
+        message = "좋아요 취소"
+    else:
+        message = "좋아요"
+
+    context = {'like_count': post.like_count,
+               'message': message,
+               'nickname': request.user.profile.nickname }
+
+    return HttpResponse(json.dumps(context), content_type="application/json")
+  
