@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 from django.conf import settings
 
 # Create your models here.
@@ -21,12 +21,13 @@ class Tag(models.Model):
     
   
 class Post(models.Model):
-     like_user_set = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='like_user_set', through='Like')
-
+     like_user_set = models.ManyToManyField(User, blank=True, related_name='like_user_set', through='Like')
+     
      @property
      def like_count(self):
           return self.like_user_set.count()
 
 
 class Like(models.Model):
-      post = models.ForeignKey(Post)
+      post = models.ForeignKey(Post, on_delete=models.CASCADE)
+      user = models.ForeignKey(User, on_delete=models.CASCADE)
